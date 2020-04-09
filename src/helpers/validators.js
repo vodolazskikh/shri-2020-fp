@@ -1,4 +1,4 @@
-const R = require("ramda");
+import * as R from "ramda";
 /**
  * @file Домашка по FP ч. 1
  *
@@ -63,27 +63,47 @@ export const validateFieldN4 = (objects) => {
 
 // 5. Три фигуры одного любого цвета кроме белого.
 export const validateFieldN5 = (objects) => {
-  const isNotWhite = (color) => color !== "white";
-  const isAllNotWhite = (x) => x >= 4;
-  const isSingleColor = (x) => x === 1;
+  const isRed = (color) => color === "red";
+  const isGreen = (color) => color === "green";
+  const isBlue = (color) => color === "blue";
+  const isOrange = (color) => color === "orange";
 
-  const checkIfAllWhite = R.compose(
-    isAllNotWhite,
+  const isMoreThenThree = (x) => x >= 3;
+
+  const isMoreThenThreeOrange = R.compose(
+    isMoreThenThree,
     R.length,
-    R.filter(isNotWhite),
+    R.filter(isOrange),
     R.values
   );
 
-  const checkIsSingleColor = R.compose(
-    isSingleColor,
+  const isMoreThenThreeBlue = R.compose(
+    isMoreThenThree,
     R.length,
-    R.uniq,
-    R.filter(isNotWhite),
+    R.filter(isBlue),
     R.values
   );
 
-  const getResult = R.allPass([checkIfAllWhite, checkIsSingleColor]);
-  console.log(getResult(objects));
+  const isMoreThenThreeRed = R.compose(
+    isMoreThenThree,
+    R.length,
+    R.filter(isRed),
+    R.values
+  );
+
+  const isMoreThenThreeGreen = R.compose(
+    isMoreThenThree,
+    R.length,
+    R.filter(isGreen),
+    R.values
+  );
+
+  const getResult = R.anyPass([
+    isMoreThenThreeGreen,
+    isMoreThenThreeRed,
+    isMoreThenThreeBlue,
+    isMoreThenThreeOrange,
+  ]);
 
   return getResult(objects);
 };
